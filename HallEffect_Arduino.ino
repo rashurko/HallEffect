@@ -3,6 +3,8 @@
 Adafruit_ADS1115 ads;  /* Use this for the 16-bit version */
 // Adafruit_ADS1015 ads;     /* Use this for the 12-bit version */
 
+char material[] = "koper"; // Used material
+float R_mat = 0.10; // Resistance of the material in ohm
 float R1 = 100.0;
 float R2 = 1000000.0;
 float A = 1.0 + R2/R1;    // Amplification caused by R1 and R2
@@ -44,16 +46,17 @@ void loop(void)
 
   volts0 = ads.computeVolts(adc0) / A;
   volts1 = ads.computeVolts(adc1) / A;
-  volts2 = ads.computeVolts(adc2) / A;
-  volts3 = ads.computeVolts(adc3) / A;
+  volts2 = ads.computeVolts(adc2);
+  volts3 = ads.computeVolts(adc3);
 
-  Serial.println("-----------------------------------------------------------");
+  Serial.print("-------------------"); Serial.print(material); Serial.print(","); Serial.print(" R="); Serial.print(R_mat); Serial.println("-------------------");
   Serial.print("AIN0: "); Serial.print(adc0); Serial.print("  "); Serial.print(volts0); Serial.println("V");
   Serial.print("AIN1: "); Serial.print(adc1); Serial.print("  "); Serial.print(volts1); Serial.println("V");
   Serial.print("AIN2: "); Serial.print(adc2); Serial.print("  "); Serial.print(volts2); Serial.println("V");
   Serial.print("AIN3: "); Serial.print(adc3); Serial.print("  "); Serial.print(volts3); Serial.println("V");
 
-  Serial.print("V_H: "); Serial.print(adc0 - adc1); Serial.print("  "); Serial.print(volts3); Serial.println("V");
+  Serial.print("V_H: "); Serial.print(adc0 - adc1); Serial.print("  "); Serial.print(volts0 - volts1); Serial.println("V");
+  Serial.print("I: "); Serial.print(adc2 - adc3); Serial.print("  "); Serial.print((volts2 - volts3) / R_mat); Serial.println("A");
 
   delay(1000);
 }
