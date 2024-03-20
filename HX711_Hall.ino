@@ -5,6 +5,9 @@
 const int LOADCELL_DOUT_PIN = 3;
 const int LOADCELL_SCK_PIN = 2;
 
+int A0_value = analogRead(A0);
+int R = 1; // resistance in ohm
+
 HX711 scale;
 
 void setup() {
@@ -15,9 +18,15 @@ void setup() {
 }
 
 void loop() {
-  float voltage = (scale.get_value(1)); // Get the voltage reading
+  float voltage_H = (scale.get_value(1)); // Get the voltage reading
   Serial.print("Voltage: ");
-  Serial.print(voltage, 8); // Print voltage with 2 decimal places
+  Serial.print(voltage_H, 8); // Print voltage with 8 decimal places
   Serial.println(" V");
-  delay(100); // Wait for a second before reading again
+
+  float voltage = A0_value * (5.0 / 1023.0);
+  float current = voltage / R;
+  Serial.print("Current: ");
+  Serial.print(current);
+  Serial.println(" A");
+  delay(100); // Wait for 0.1 sec before reading again
 }
